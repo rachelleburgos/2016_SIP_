@@ -4,20 +4,22 @@ A game about body positivity written in collaboration with
 @rachelleburgos, @louisa31, @adaar, and @jen12.
 
 
-# --- PURPOSE ---
-foo
+# Purpose
+>>Nowadays, toy manufacturers and the media convey messages of an ideal body type to young and impressionable children. Whether it be hyper-masculine superheroes or thin-waist Barbies, children are constantly exposed to unrealistic body standards. For this reason, they grow up with this image of what they’re told their bodies should look like. Oftentimes, this affects their self-esteem and can contribute to the adoption of unhealthy habits such as early dieting. Eventually, this could snowball into severe consequences such as eating disorders and depression. In order to solve this problem, we decided to create a game because it is an interactive and fun platform for children to receive our message of body positivity. Rather than explicitly telling users the importance of caring for their body, the game implicitly tells them to take care of their body and love themselves no matter what.
 
 
-Some libraries we utilised include:
+
+
+# Used Libraries
 >> NAME
-		purpose
+	>>purpose
 >> ...
 
 
 
 
 
-# --- LICENSE ---
+# LICENSE
 
 MIT License
 
