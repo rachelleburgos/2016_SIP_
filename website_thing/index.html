@@ -1,0 +1,58 @@
+ <!--
+Design by Bryant Smith
+http://www.bryantsmith.com
+http://www.aszx.net
+email: templates [-at-] bryantsmith [-dot-] com
+Released under Creative Commons Attribution 2.5 Generic.  In other words, do with it what you please; but please leave the link if you'd be so kind :)
+
+Name       : A Farewell to Colors
+Description: One column, with top naviagation
+Version    : 1.0
+Released   : 20081230
+-->
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+<title>Insert Name</title>
+</head>
+
+<body onload="startGame()">
+
+    <div id="page">
+		
+        <div id="header">
+        	<h1>Name of game here</h1>
+            <h2>By: Us</h2>
+            
+      </div>
+
+  <div id="bar">
+        	
+      </div>
+        
+</div>
+<script>
+
+function startGame() {
+    myGameArea.start();
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 960;
+        this.canvas.height = 550;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    }
+}
+
+</script>
+        <div id="footer"><a href="http://www.aszx.net">web development</a> by <a href="http://www.bryantsmith.com">bryant smith</a></div>
+</body>
+</html>
