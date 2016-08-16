@@ -1,4 +1,4 @@
-# --- 2016_SIP_NYC_Blackrock_Cactus ---
+# 2016_SIP_NYC_Blackrock_Cactus
 
 A game about body positivity written in collaboration with 
 @rachelleburgos, @louisa31, @adaar, and @jen12.
@@ -10,9 +10,9 @@ A game about body positivity written in collaboration with
 
 
 
-# Used Libraries
->> NAME
-	>>purpose
+# Used Resources
+>> phaser.io
+	>>framework for game
 >> ...
 
 
@@ -23,7 +23,7 @@ A game about body positivity written in collaboration with
 
 MIT License
 
-Copyright (c) [year] [fullname]
+Copyright (c) 2016 Rachelle Burgos, Hanna Gropen, Louisa Evola, Jennifer Lopez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
