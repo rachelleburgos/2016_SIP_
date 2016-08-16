@@ -23,23 +23,14 @@ Released   : 20081230
 
 <body onload="startGame()">
 
-    <div id="page">
-		
-        <div id="header">
-        	<h1>Name of game here</h1>
-            <h2>By: Us</h2>
-            
-      </div>
-
-  <div id="bar">
-        	
-      </div>
+    
         
-</div>
+
 <script>
 
 function startGame() {
     myGameArea.start();
+	start_button = new component(300, 120, "start_button.png", 480, 200, "image");
 }
 
 var myGameArea = {
@@ -51,8 +42,18 @@ var myGameArea = {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     }
 }
+if start_button.clicked {
+    function updateGameArea() {
+        myGameArea.clear();
+        // here put contents of new screen
+        
+        
+        
 
+            
+    }
+  
 </script>
-        <div id="footer"><a href="http://www.aszx.net">web development</a> by <a href="http://www.bryantsmith.com">bryant smith</a></div>
+        
 </body>
 </html>

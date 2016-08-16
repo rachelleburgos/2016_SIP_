@@ -13,7 +13,10 @@ body {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	font-size: 13px;
 	color: #F1F5F8;
-	background-color:#2A2A2A;
+	background-image: url("http://orig13.deviantart.net/0d10/f/2014/160/1/9/kitchen_by_nhe1-d7lmjr5.png");
+	background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center; 
 }
 *
 {
