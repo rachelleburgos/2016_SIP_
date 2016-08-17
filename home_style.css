@@ -1,4 +1,16 @@
-html 
-{
-background.fill: blue;	
+html {
+	background-color: white;	
+}
+
+h1 {
+	font-family: 
+	font-size: 50px;
+}
+
+
+
+body {
+	margin:          auto;
+	border-style:    inset 5px;
+	background-fill: black;
 }
