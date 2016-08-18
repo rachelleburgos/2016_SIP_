@@ -1,5 +1,3 @@
-
-
 var backgroundv;
 var startButton;
 var nextButton;
@@ -79,7 +77,7 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
   	   // prickly cactus 
 		var pricklycactus = this.game.add.button(400,300, 'pricklycactus', this.gotoPrickly, this);
 		pricklycactus.anchor.setTo(0.5, 0.5);
-		pricklycactus.scale.setTo(1, 1);
+		pricklycactus.scale.setTo(1.3, 1.3);
 
 		// round cactus 
 		var roundcactus = this.game.add.button(600,300, 'roundcactus', this.gotoRound, this);
@@ -87,9 +85,9 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
 		roundcactus.scale.setTo(0.5, 0.5);
 
 		//flowered cactus 
-		var floweredcactus = this.game.add.button(800,300, 'floweredcactus', this.gotoFlowered, this);
+		var floweredcactus = this.game.add.button(800,380, 'floweredcactus', this.gotoFlowered, this);
 		floweredcactus.anchor.setTo(0.5, 0.5);
-		floweredcactus.scale.setTo(0.5, 0.5);
+		floweredcactus.scale.setTo(1.1, 1.1);
 
 	  },
 	  
@@ -223,7 +221,7 @@ var pricklyState = {
     create: function(){
         var desertPic = this.game.add.image(0,0,'desert');
         pricklyPlayer = game.add.sprite(375,350, 'pricklycactus');
-        pricklyPlayer.scale.setTo(0.6, 0.6);
+        pricklyPlayer.scale.setTo(1, 1);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.enable(pricklyPlayer, Phaser.Physics.ARCADE);
@@ -398,13 +396,12 @@ var floweredState = {
     create: function(){
         var desertPic = this.game.add.sprite(0,0,'desert');
         floweredPlayer = game.add.sprite(375,350, 'floweredcactus');
-        floweredPlayer.scale.setTo(0.4,0.4);
-
+        floweredPlayer.scale.setTo(.75,.75);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.enable(floweredPlayer, Phaser.Physics.ARCADE);
         floweredPlayer.body.collideWorldBounds = true;
-        floweredPlayer.body.gravity.y = 1000;
+        floweredPlayer.body.gravity.y = 100;
         cursors = game.input.keyboard.createCursorKeys(); 
 
 // falling objects
