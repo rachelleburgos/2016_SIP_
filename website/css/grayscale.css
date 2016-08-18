@@ -6,7 +6,7 @@
 body {
   width: 100%;
   height: 100%;
-  font-family: "Lora", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Press Start 2P', cursive;
   color: white;
   background-color: black;
 }
@@ -22,7 +22,7 @@ h5,
 h6 {
   margin: auto;
   text-transform: uppercase;
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: font-family: 'Press Start 2P', cursive;
   font-weight: 700;
   letter-spacing: 1px;
 }
@@ -30,12 +30,14 @@ p {
   margin: 0 0 25px;
   font-size: 18px;
   line-height: 1.5;
+  font-family: 'Press Start 2P', cursive;
 }
 @media (min-width: 768px) {
   p {
     margin: 0 0 35px;
     font-size: 20px;
     line-height: 1.6;
+	font-family: 'Press Start 2P', cursive;
   }
 }
 a {
@@ -43,6 +45,11 @@ a {
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+}
+iframe{
+    overflow:hidden;
+	border:none;
+	
 }
 a:hover,
 a:focus {
@@ -56,7 +63,7 @@ a:focus {
   margin-bottom: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   text-transform: uppercase;
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Press Start 2P', cursive;
   background-color: black;
 }
 .navbar-custom .navbar-toggle {
@@ -215,7 +222,7 @@ a:focus {
 }
 .btn {
   text-transform: uppercase;
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Press Start 2P', cursive;
   font-weight: 400;
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
@@ -223,8 +230,8 @@ a:focus {
   border-radius: 0;
 }
 .btn-default {
-  border: 1px solid #42DCA3;
-  color: #42DCA3;
+  border: 1px solid black;
+  color: black;
   background-color: transparent;
 }
 .btn-default:hover,
@@ -232,7 +239,7 @@ a:focus {
   border: 1px solid #42DCA3;
   outline: none;
   color: black;
-  background-color: #42DCA3;
+  background-color: transparent;
 }
 ul.banner-social-buttons {
   margin-top: 0;
