@@ -2,7 +2,8 @@ var backgroundv;
 var startButton;
 var nextButton;
 var background;
-
+var spiders;
+var spider;
 
 var loadState = { // on load, with scrolling clouds and start button
     preload: function(){
@@ -64,10 +65,10 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
         game.load.image('floweredcactus', 'assets/floweredcactus.png');
         game.load.image('pricklycactus', 'assets/pricklycactus.png');
         game.load.image('roundcactus', 'assets/roundcactus.png');
-        game.load.image('bluebackground', 'assets/bluebackground.png'); 
+        game.load.image('pickacactus', 'assets/pick_a_cactus.png'); 
     },
     create: function(){
-       	background = game.add.tileSprite(0,0, 960, 550, 'bluebackground');
+       	background = game.add.tileSprite(0,0, 960, 550, 'pickacactus');
        
        // skinny cactus
         var skinnycactus = this.game.add.button(200,300, 'skinnycactus', this.gotoSkinny, this);
@@ -92,21 +93,20 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
 	  },
 	  
 	gotoSkinny: function(){
-        	this.game.state.start("skinnyState");
-	  
+        	this.game.state.start('skinnyState');
 	},
 	
 	gotoPrickly: function(){
-        	this.game.state.start("pricklyState");
+        	this.game.state.start('pricklyState');
 	
 	},
 	gotoRound: function(){
-        	this.game.state.start("roundState");
+        	this.game.state.start('roundState');
 
 	},
     gotoFlowered: function(){
-    		this.game.state.start("floweredState")
-    },
+    		this.game.state.start('floweredState');
+    }
 }
 
 
@@ -117,7 +117,7 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
 // --- game screen for skinny cactus --- 
 var skinnyState = {
  	preload: function() {
-         game.load.image('skinnycactus', 'js/assets/skinnycactus.png');  
+         game.load.image('skinnycactus', 'assets/skinnycactus.png');  
          game.load.image('desert', 'assets/desert.png');
          game.load.image('spider', 'assets/spidey.png');
          game.load.image('drop', 'assets/water_drop.png');
@@ -196,12 +196,12 @@ var skinnyState = {
     skinnyPlayer.body.velocity.x = 0; //when nothing is pressed, sprite doesn't move
         if (cursors.left.isDown)
         {
-           skinnyPlayer.body.velocity.x = -150; //left is down, sprite moves in neg direction
+           skinnyPlayer.body.velocity.x = -300; //left is down, sprite moves in neg direction
 
         }
         else if (cursors.right.isDown)
         {
-          skinnyPlayer.body.velocity.x = 150; //right is down, sprite moves in pos direction
+          skinnyPlayer.body.velocity.x = 300; //right is down, sprite moves in pos direction
         }
  
 }
@@ -224,6 +224,7 @@ var pricklyState = {
         pricklyPlayer.scale.setTo(1, 1);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        game.physics.startSystem(Phaser.Physics.P2JS);
         game.physics.enable(pricklyPlayer, Phaser.Physics.ARCADE);
         pricklyPlayer.body.collideWorldBounds = true;
         pricklyPlayer.body.gravity.y = 1000;
@@ -264,14 +265,17 @@ var pricklyState = {
         var sun = spiders.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
         sun.body.velocity.y = game.rnd.between(80, 150);
+
+        game.physics.enable(spider, Phaser.Physics.ARCADE);
+
     	}       
 
   },
     update: function (){
 
     spiders.forEach(checkPos, this);
+    
     function checkPos(spider) {
-
     if (spider.y > 550){
       spider.y = -200;
         spider.x = game.world.randomX;
@@ -290,8 +294,13 @@ var pricklyState = {
         {
           pricklyPlayer.body.velocity.x = 200;
         }
- 
+    this.game.physics.arcade.collide(spiders, pricklyPlayer, this.destroySprite, null, this);
+    function destroySprite (){
+    spiders.destroy(true);
     }
+}
+
+   
 }
 
 //--- game screen for round cactus ---
