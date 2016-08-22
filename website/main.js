@@ -2,8 +2,14 @@ var backgroundv;
 var startButton;
 var nextButton;
 var background;
-var spiders;
+var good_elements;
+var bad_elements;
+var sun;
 var spider;
+var chemical;
+var scoreText;
+var score = 0;
+
 
 var loadState = { // on load, with scrolling clouds and start button
     preload: function(){
@@ -71,22 +77,22 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
        	background = game.add.tileSprite(0,0, 960, 550, 'pickacactus');
        
        // skinny cactus
-        var skinnycactus = this.game.add.button(200,300, 'skinnycactus', this.gotoSkinny, this);
+        var skinnycactus = this.game.add.button(120,268, 'skinnycactus', this.gotoSkinny, this);
 		skinnycactus.anchor.setTo(0.5, 0.5);
-		skinnycactus.scale.setTo(0.5, 0.5);
+		skinnycactus.scale.setTo(0.45, 0.45);
 	 
   	   // prickly cactus 
-		var pricklycactus = this.game.add.button(400,300, 'pricklycactus', this.gotoPrickly, this);
+		var pricklycactus = this.game.add.button(360,300, 'pricklycactus', this.gotoPrickly, this);
 		pricklycactus.anchor.setTo(0.5, 0.5);
 		pricklycactus.scale.setTo(1.3, 1.3);
 
 		// round cactus 
-		var roundcactus = this.game.add.button(600,300, 'roundcactus', this.gotoRound, this);
+		var roundcactus = this.game.add.button(580,260, 'roundcactus', this.gotoRound, this);
 		roundcactus.anchor.setTo(0.5, 0.5);
-		roundcactus.scale.setTo(0.5, 0.5);
+		roundcactus.scale.setTo(1.2, 1.2);
 
 		//flowered cactus 
-		var floweredcactus = this.game.add.button(800,380, 'floweredcactus', this.gotoFlowered, this);
+		var floweredcactus = this.game.add.button(815,300, 'floweredcactus', this.gotoFlowered, this);
 		floweredcactus.anchor.setTo(0.5, 0.5);
 		floweredcactus.scale.setTo(1.1, 1.1);
 
@@ -123,6 +129,7 @@ var skinnyState = {
          game.load.image('drop', 'assets/water_drop.png');
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
+         
 
 },
 
@@ -144,7 +151,7 @@ var skinnyState = {
 
        
         //random falling spiders 
-        spiders = game.add.physicsGroup();
+        spiders = game.add.physicsGroup(Phaser.Physics.ARCADE);
         for (var i = 0; i < 2; i++)
     	{
         var spider = spiders.create(game.world.randomX, -200, 'spider');
@@ -185,7 +192,6 @@ var skinnyState = {
   	
     spiders.forEach(checkPos, this);
     function checkPos(spider) {
-
     if (spider.y > 550){
       spider.y = -200;
         spider.x = game.world.randomX;
@@ -216,92 +222,103 @@ var pricklyState = {
          game.load.image('drop', 'assets/water_drop.png');
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
+         
+         
 },
 
     create: function(){
         var desertPic = this.game.add.image(0,0,'desert');
+        scoreText= game.add.text(800, 20, 'score: 0',  { font: '34px Arial', fill: '#FFFFFF'});
+        
         pricklyPlayer = game.add.sprite(375,350, 'pricklycactus');
         pricklyPlayer.scale.setTo(1, 1);
 
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.physics.startSystem(Phaser.Physics.P2JS);
-        game.physics.enable(pricklyPlayer, Phaser.Physics.ARCADE);
+       // game.physics.startSystem(Phaser.Physics.ARCADE);
+       // game.physics.startSystem(Phaser.Physics.P2JS);
+        game.physics.arcade.enable(pricklyPlayer);
         pricklyPlayer.body.collideWorldBounds = true;
         pricklyPlayer.body.gravity.y = 1000;
         cursors = game.input.keyboard.createCursorKeys();
 
 // falling objects
         //random falling spiders 
-        spiders = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
+        good_elements = game.add.physicsGroup();
+        bad_elements = game.add.physicsGroup();
+
+        for (var i = 0; i < 1; i++)
     	{
-        var spider = spiders.create(game.world.randomX, -200, 'spider');
+        spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
         spider.body.velocity.y = game.rnd.between(80, 150);
     	}
 
     	//random falling drop
-        drops = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
+        for (var i = 0; i < 1; i++)
     	{
-        var drop = spiders.create(game.world.randomX, -200, 'drop');
+        drop = good_elements.create(game.world.randomX, -200, 'drop');
         drop.scale.setTo(0.1, 0.1);
         drop.body.velocity.y = game.rnd.between(80, 150);
     	}
 
     	//random falling chemical drop
-    	chemicals = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
+    	//chemicals = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
     	{
-        var chemical = spiders.create(game.world.randomX, -200, 'chemical');
+        chemical = bad_elements.create(game.world.randomX, -200, 'chemical');
         chemical.scale.setTo(0.09, 0.09);
         chemical.body.velocity.y = game.rnd.between(80, 150);
     	}
 
     	//random falling sun
-    	suns = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
+    	//suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
     	{
-        var sun = spiders.create(game.world.randomX, -200, 'sun');
+        sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
         sun.body.velocity.y = game.rnd.between(80, 150);
-
-        game.physics.enable(spider, Phaser.Physics.ARCADE);
 
     	}       
 
   },
+    
     update: function (){
 
-    spiders.forEach(checkPos, this);
+        good_elements.forEach(checkPos, this);
+        bad_elements.forEach(checkPos, this);
     
-    function checkPos(spider) {
-    if (spider.y > 550){
-      spider.y = -200;
-        spider.x = game.world.randomX;
-    }
- }
-
-
-     pricklyPlayer.body.velocity.x = 0;
-
-        if (cursors.left.isDown)
-        {
-           pricklyPlayer.body.velocity.x = -200;
-
+        function checkPos(spider) {
+            if (spider.y > 750){
+                spider.y = -200;
+                spider.x = game.world.randomX;
+            } 
         }
-        else if (cursors.right.isDown)
-        {
+    
+        pricklyPlayer.body.velocity.x = 0;
+
+        if (cursors.left.isDown){
+           pricklyPlayer.body.velocity.x = -200;
+        } else if (cursors.right.isDown){
           pricklyPlayer.body.velocity.x = 200;
         }
-    this.game.physics.arcade.collide(spiders, pricklyPlayer, this.destroySprite, null, this);
-    function destroySprite (){
-    spiders.destroy(true);
+
+       game.physics.arcade.overlap(pricklyPlayer, good_elements, collisionHandler, null, this);
+       game.physics.arcade.overlap(pricklyPlayer, bad_elements, collisionHandler1, null, this);
     }
 }
+     function collisionHandler (pricklyPlayer, good_elements){
+       good_elements.y = -100
+       good_elements.x = game.world.randomX;
+       score += 10;
+       scoreText.text = 'score: ' + score;
+        }     
+  function collisionHandler1 (pricklyPlayer, bad_elements){
+       bad_elements.y = -100
+       bad_elements.x = game.world.randomX;
+       score -= 20;
+       scoreText.text = 'score: ' + score;
+        }     
 
-   
-}
+
 
 //--- game screen for round cactus ---
 var roundState = {
@@ -326,7 +343,7 @@ var roundState = {
         cursors = game.input.keyboard.createCursorKeys();
 
          //random falling spiders 
-        spiders = game.add.physicsGroup();
+        spiders = game.add.physicsGroup(Phaser.Physics.ARCADE);
         for (var i = 0; i < 2; i++)
     	{
         var spider = spiders.create(game.world.randomX, -200, 'spider');
@@ -335,7 +352,7 @@ var roundState = {
     	}
 
     	//random falling drop
-        drops = game.add.physicsGroup();
+        drops = game.add.physicsGroup(Phaser.Physics.ARCADE);
         for (var i = 0; i < 2; i++)
     	{
         var drop = spiders.create(game.world.randomX, -200, 'drop');
@@ -344,7 +361,7 @@ var roundState = {
     	}
 
     	//random falling chemical drop
-    	chemicals = game.add.physicsGroup();
+    	chemicals = game.add.physicsGroup(Phaser.Physics.ARCADE);
         for (var i = 0; i < 2; i++)
     	{
         var chemical = spiders.create(game.world.randomX, -200, 'chemical');
@@ -353,7 +370,7 @@ var roundState = {
     	}
 
     	//random falling sun
-    	suns = game.add.physicsGroup();
+    	suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
         for (var i = 0; i < 2; i++)
     	{
         var sun = spiders.create(game.world.randomX, -200, 'sun');
@@ -415,7 +432,7 @@ var floweredState = {
 
 // falling objects
          //random falling spiders 
-        spiders = game.add.physicsGroup();
+        spiders = game.add.physicsGroup(Phaser.Physics.ARCADE);
         for (var i = 0; i < 2; i++)
     	{
         var spider = spiders.create(game.world.randomX, -200, 'spider');
@@ -424,7 +441,7 @@ var floweredState = {
     	}
 
     	//random falling drop
-        drops = game.add.physicsGroup();
+        drops = game.add.physicsGroup(Phaser.Physics.ARCADE);
         for (var i = 0; i < 2; i++)
     	{
         var drop = spiders.create(game.world.randomX, -200, 'drop');
