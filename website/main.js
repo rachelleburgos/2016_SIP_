@@ -8,7 +8,10 @@ var sun;
 var spider;
 var chemical;
 var scoreText;
-var score = 0;
+var score = 50;
+var endScreen;
+var playAgain;
+var updated_score;
 
 
 var loadState = { // on load, with scrolling clouds and start button
@@ -28,17 +31,34 @@ var loadState = { // on load, with scrolling clouds and start button
 
 	},
 	playTheGame: function(){
-		this.game.state.start("instructionState");
+		this.game.state.start("introState");
 	},
 	update: function(){
     	sky.tilePosition.x += 5;
     }
 }
-
-
+// intro page
+var introState = {
+    
+    preload: function() {
+    game.load.image('intro', 'assets/intro.png');
+    game.load.image('nextbutton', 'assets/nextbutton.png');
+    },
+    
+    create: function(){
+        background = game.add.tileSprite(0,0, 960, 550, 'intro');
+        var nextButton = this.game.add.button(850, 65, 'nextbutton', this.gotoInstruct, this);
+    },
+    
+    gotoInstruct: function(){
+        this.game.state.start("instructionState");
+    },
+    
+    update: function(){
+    }
+}
 
 // --- INSTRUCTIONS PG ---
-
 var instructionState = { // state where you cactus is chosen, after enter is pressed
     preload: function() {
         game.load.image('instructions', 'assets/instructions_updated.png');   
@@ -129,15 +149,18 @@ var skinnyState = {
          game.load.image('drop', 'assets/water_drop.png');
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
+         game.load.image('heart', 'assets/heart.png');
          
 
 },
 
-
  	create: function(){
         var desertPic = this.game.add.image(0,0,'desert');
+        scoreText= game.add.text(780, 20, 'Health: 50%',  { font: '34px Arial', fill: '#FFFFFF'});
         skinnyPlayer = game.add.sprite(375,350, 'skinnycactus');
         skinnyPlayer.scale.setTo(0.3, 0.3);
+        heart= game.add.sprite(750,21, 'heart');
+        heart.scale.setTo(0.1, 0.1);
         
 
         //enable arcade functionality
@@ -151,67 +174,90 @@ var skinnyState = {
 
        
         //random falling spiders 
-        spiders = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 2; i++)
-    	{
-        var spider = spiders.create(game.world.randomX, -200, 'spider');
+        good_elements = game.add.physicsGroup();
+        bad_elements = game.add.physicsGroup();
+
+        for (var i = 0; i < 1; i++)
+        {
+        spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
         spider.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling drop
-        drops = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
-    	{
-        var drop = spiders.create(game.world.randomX, -200, 'drop');
+        //random falling drop
+        for (var i = 0; i < 1; i++)
+        {
+        drop = good_elements.create(game.world.randomX, -200, 'drop');
         drop.scale.setTo(0.1, 0.1);
         drop.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling chemical drop
-    	chemicals = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
-    	{
-        var chemical = spiders.create(game.world.randomX, -200, 'chemical');
+        //random falling chemical drop
+        //chemicals = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
+        {
+        chemical = bad_elements.create(game.world.randomX, -200, 'chemical');
         chemical.scale.setTo(0.09, 0.09);
         chemical.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling sun
-    	suns = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
-    	{
-        var sun = spiders.create(game.world.randomX, -200, 'sun');
+        //random falling sun
+        //suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
+        {
+        sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
         sun.body.velocity.y = game.rnd.between(80, 150);
-    	}
 
+        }       
 
-},
-  	update: function (){
-  	
-    spiders.forEach(checkPos, this);
-    function checkPos(spider) {
-    if (spider.y > 550){
-      spider.y = -200;
-        spider.x = game.world.randomX;
+  },
+    
+    update: function (){
+
+        good_elements.forEach(checkPos, this);
+        bad_elements.forEach(checkPos, this);
+    
+        function checkPos(spider) {
+            if (spider.y > 750){
+                spider.y = -200;
+                spider.x = game.world.randomX;
+            } 
+        }
+    
+        skinnyPlayer.body.velocity.x = 0;
+
+        if (cursors.left.isDown){
+           skinnyPlayer.body.velocity.x = -300;
+        } else if (cursors.right.isDown){
+          skinnyPlayer.body.velocity.x = 300;
+        }
+
+       game.physics.arcade.overlap(skinnyPlayer, good_elements, collisionHandler, null, this);
+       game.physics.arcade.overlap(skinnyPlayer, bad_elements, collisionHandler1, null, this);
+
+       if (score <= 0){
+            this.game.state.start('gameoverState');
+        }
+       if (score >= 100){
+            this.game.state.start('youwinState');
+       }
+
     }
- }
-
-
-    skinnyPlayer.body.velocity.x = 0; //when nothing is pressed, sprite doesn't move
-        if (cursors.left.isDown)
-        {
-           skinnyPlayer.body.velocity.x = -300; //left is down, sprite moves in neg direction
-
-        }
-        else if (cursors.right.isDown)
-        {
-          skinnyPlayer.body.velocity.x = 300; //right is down, sprite moves in pos direction
-        }
- 
 }
-}
+     function collisionHandler (skinnyPlayer, good_elements){
+       good_elements.y = -100
+       good_elements.x = game.world.randomX;
+       score += 10;
+       scoreText.text = 'Health: ' + score + '%';
+        }     
+  function collisionHandler1 (skinnyPlayer, bad_elements){
+       bad_elements.y = -100
+       bad_elements.x = game.world.randomX;
+       score -= 20;
+       scoreText.text = 'Health: ' + score + '%'; 
+   }     
+
      
 //--- game screen for prickly cactus ---
 var pricklyState = {
@@ -222,16 +268,18 @@ var pricklyState = {
          game.load.image('drop', 'assets/water_drop.png');
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
-         
+         game.load.image('heart', 'assets/heart.png');
          
 },
 
     create: function(){
         var desertPic = this.game.add.image(0,0,'desert');
-        scoreText= game.add.text(800, 20, 'score: 0',  { font: '34px Arial', fill: '#FFFFFF'});
+        scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
         
         pricklyPlayer = game.add.sprite(375,350, 'pricklycactus');
         pricklyPlayer.scale.setTo(1, 1);
+        heart= game.add.sprite(758,21, 'heart');
+        heart.scale.setTo(0.1, 0.1);
 
        // game.physics.startSystem(Phaser.Physics.ARCADE);
        // game.physics.startSystem(Phaser.Physics.P2JS);
@@ -296,26 +344,34 @@ var pricklyState = {
         pricklyPlayer.body.velocity.x = 0;
 
         if (cursors.left.isDown){
-           pricklyPlayer.body.velocity.x = -200;
+           pricklyPlayer.body.velocity.x = -300;
         } else if (cursors.right.isDown){
-          pricklyPlayer.body.velocity.x = 200;
+          pricklyPlayer.body.velocity.x = 300;
         }
 
        game.physics.arcade.overlap(pricklyPlayer, good_elements, collisionHandler, null, this);
        game.physics.arcade.overlap(pricklyPlayer, bad_elements, collisionHandler1, null, this);
+
+       if (score <= -50){
+            this.game.state.start('gameoverState');
+        }
+       if (score >= 100){
+            this.game.state.start('youwinState');
+       }
+
     }
 }
      function collisionHandler (pricklyPlayer, good_elements){
        good_elements.y = -100
        good_elements.x = game.world.randomX;
        score += 10;
-       scoreText.text = 'score: ' + score;
+       scoreText.text = 'health: ' + score;
         }     
   function collisionHandler1 (pricklyPlayer, bad_elements){
        bad_elements.y = -100
        bad_elements.x = game.world.randomX;
        score -= 20;
-       scoreText.text = 'score: ' + score;
+       scoreText.text = 'health: ' + score;
         }     
 
 
@@ -329,13 +385,17 @@ var roundState = {
          game.load.image('drop', 'assets/water_drop.png');
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
+         game.load.image('heart', 'assets/heart.png');
 },
     
     create: function(){
         var desertPic = this.game.add.image(0,0,'desert');
+        scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
         roundPlayer = game.add.sprite(375,350, 'roundcactus');
-        roundPlayer.scale.setTo(0.3,0.3);
-        
+        roundPlayer.scale.setTo(0.8,0.8);
+        heart= game.add.sprite(758,21, 'heart');
+        heart.scale.setTo(0.1, 0.1);
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.enable(roundPlayer, Phaser.Physics.ARCADE);
         roundPlayer.body.collideWorldBounds = true;
@@ -343,70 +403,89 @@ var roundState = {
         cursors = game.input.keyboard.createCursorKeys();
 
          //random falling spiders 
-        spiders = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 2; i++)
-    	{
-        var spider = spiders.create(game.world.randomX, -200, 'spider');
+        good_elements = game.add.physicsGroup();
+        bad_elements = game.add.physicsGroup();
+
+        for (var i = 0; i < 1; i++)
+        {
+        spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
         spider.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling drop
-        drops = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 2; i++)
-    	{
-        var drop = spiders.create(game.world.randomX, -200, 'drop');
+        //random falling drop
+        for (var i = 0; i < 1; i++)
+        {
+        drop = good_elements.create(game.world.randomX, -200, 'drop');
         drop.scale.setTo(0.1, 0.1);
         drop.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling chemical drop
-    	chemicals = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 2; i++)
-    	{
-        var chemical = spiders.create(game.world.randomX, -200, 'chemical');
+        //random falling chemical drop
+        //chemicals = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
+        {
+        chemical = bad_elements.create(game.world.randomX, -200, 'chemical');
         chemical.scale.setTo(0.09, 0.09);
         chemical.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling sun
-    	suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 2; i++)
-    	{
-        var sun = spiders.create(game.world.randomX, -200, 'sun');
+        //random falling sun
+        //suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
+        {
+        sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
         sun.body.velocity.y = game.rnd.between(80, 150);
-    	}       
 
-    },
+        }       
 
+  },
+    
     update: function (){
 
-    spiders.forEach(checkPos, this);
-    function checkPos(spider) {
-
-    if (spider.y > 550){
-      spider.y = -200;
-        spider.x = game.world.randomX;
-    }
- }
-
-    roundPlayer.body.velocity.x = 0;
-
-        if (cursors.left.isDown)
-        {
-           roundPlayer.body.velocity.x = -200;
-
+        good_elements.forEach(checkPos, this);
+        bad_elements.forEach(checkPos, this);
+    
+        function checkPos(spider) {
+            if (spider.y > 750){
+                spider.y = -200;
+                spider.x = game.world.randomX;
+            } 
         }
-        else if (cursors.right.isDown)
-        {
-          roundPlayer.body.velocity.x = 200;
+    
+       roundPlayer.body.velocity.x = 0;
+
+        if (cursors.left.isDown){
+           roundPlayer.body.velocity.x = -300;
+        } else if (cursors.right.isDown){
+          roundPlayer.body.velocity.x = 300;
         }
 
-    }
+       game.physics.arcade.overlap(roundPlayer, good_elements, collisionHandler, null, this);
+       game.physics.arcade.overlap(roundPlayer, bad_elements, collisionHandler1, null, this);
 
+       if (score <= -50){
+            this.game.state.start('gameoverState');
+        }
+       if (score >= 100){
+            this.game.state.start('youwinState');
+       }
+
+    }
 }
-
+     function collisionHandler (roundPlayer, good_elements){
+       good_elements.y = -100
+       good_elements.x = game.world.randomX;
+       score += 10;
+       scoreText.text = 'health: ' + score;
+        }     
+  function collisionHandler1 (roundPlayer, bad_elements){
+       bad_elements.y = -100
+       bad_elements.x = game.world.randomX;
+       score -= 20;
+       scoreText.text = 'health: ' + score; 
+   }     
 
 
 //-- game screen for flowered cactus ---
@@ -418,11 +497,15 @@ var floweredState = {
          game.load.image('drop', 'assets/water_drop.png');
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
+         game.load.image('heart', 'assets/heart.png');
 },
     create: function(){
         var desertPic = this.game.add.sprite(0,0,'desert');
+        scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
         floweredPlayer = game.add.sprite(375,350, 'floweredcactus');
         floweredPlayer.scale.setTo(.75,.75);
+        heart= game.add.sprite(758,21, 'heart');
+        heart.scale.setTo(0.1, 0.1);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.physics.enable(floweredPlayer, Phaser.Physics.ARCADE);
@@ -430,79 +513,134 @@ var floweredState = {
         floweredPlayer.body.gravity.y = 100;
         cursors = game.input.keyboard.createCursorKeys(); 
 
-// falling objects
+
          //random falling spiders 
-        spiders = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 2; i++)
-    	{
-        var spider = spiders.create(game.world.randomX, -200, 'spider');
+        good_elements = game.add.physicsGroup();
+        bad_elements = game.add.physicsGroup();
+
+        for (var i = 0; i < 1; i++)
+        {
+        spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
         spider.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling drop
-        drops = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 2; i++)
-    	{
-        var drop = spiders.create(game.world.randomX, -200, 'drop');
+        //random falling drop
+        for (var i = 0; i < 1; i++)
+        {
+        drop = good_elements.create(game.world.randomX, -200, 'drop');
         drop.scale.setTo(0.1, 0.1);
         drop.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling chemical drop
-    	chemicals = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
-    	{
-        var chemical = spiders.create(game.world.randomX, -200, 'chemical');
+        //random falling chemical drop
+        //chemicals = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
+        {
+        chemical = bad_elements.create(game.world.randomX, -200, 'chemical');
         chemical.scale.setTo(0.09, 0.09);
         chemical.body.velocity.y = game.rnd.between(80, 150);
-    	}
+        }
 
-    	//random falling sun
-    	suns = game.add.physicsGroup();
-        for (var i = 0; i < 2; i++)
-    	{
-        var sun = spiders.create(game.world.randomX, -200, 'sun');
+        //random falling sun
+        //suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        for (var i = 0; i < 1; i++)
+        {
+        sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
         sun.body.velocity.y = game.rnd.between(80, 150);
-    	}       
 
+        }       
 
-    },
-
+  },
+    
     update: function (){
 
-    spiders.forEach(checkPos, this);
-    function checkPos(spider) {
+        good_elements.forEach(checkPos, this);
+        bad_elements.forEach(checkPos, this);
+    
+        function checkPos(spider) {
+            if (spider.y > 750){
+                spider.y = -200;
+                spider.x = game.world.randomX;
+            } 
+        }
+    
+       floweredPlayer.body.velocity.x = 0;
 
-    if (spider.y > 550){
-      spider.y = -200;
-        spider.x = game.world.randomX;
+        if (cursors.left.isDown){
+           floweredPlayer.body.velocity.x = -300;
+        } else if (cursors.right.isDown){
+          floweredPlayer.body.velocity.x = 300;
+        }
+
+       game.physics.arcade.overlap(floweredPlayer, good_elements, collisionHandler, null, this);
+       game.physics.arcade.overlap(floweredPlayer, bad_elements, collisionHandler1, null, this);
+
+       if (score <= -50){
+            this.game.state.start('gameoverState');
+        }
+       if (score >= 100){
+            this.game.state.start('youwinState');
+       }
+
     }
- }
-
-     floweredPlayer.body.velocity.x = 0;
-
-        if (cursors.left.isDown)
-        {
-           floweredPlayer.body.velocity.x = -200;
-
-        }
-        else if (cursors.right.isDown)
-        {
-          floweredPlayer.body.velocity.x = 200;
-        }
- 
 }
+     function collisionHandler (floweredPlayer, good_elements){
+       good_elements.y = -100
+       good_elements.x = game.world.randomX;
+       score += 10;
+       scoreText.text = 'health: ' + score;
+        }     
+  function collisionHandler1 (floweredPlayer, bad_elements){
+       bad_elements.y = -100
+       bad_elements.x = game.world.randomX;
+       score -= 20;
+       scoreText.text = 'health: ' + score; 
 }
+//game over page
+var gameoverState = {
+    preload: function() {
+        game.load.image('gameoverscreen', 'assets/game_over.png'); 
+        game.load.image('playagain', 'assets/play_again.png');
+    },
+    create: function(){
+        endScreen = this.game.add.sprite(0,0,'gameoverscreen'); 
+        playAgain=  this.game.add.button(50,400, 'playagain', this.playAgainf, this);
+    },
+    playAgainf: function(){
+        score= 0;
+        this.game.state.start('pickState');
+    }
+}
+// you win page
+var youwinState = {
+    preload: function() {
+        game.load.image('playagainscreen', 'assets/game_win.png'); 
+        game.load.image('playagain', 'assets/play_again.png');
+    },
+    create: function(){
+        endScreen = this.game.add.sprite(0,0,'playagainscreen'); 
+        playAgain=  this.game.add.button(120,268, 'playagain', this.playAgainf, this);
+    },
+    playAgainf: function(){
+        score=0;
+        this.game.state.start('pickState');
+    }
+}
+
+
 
 // --- MAIN LOOP ---
 var game = new Phaser.Game(960, 550, Phaser.CANVAS, 'gameDiv');
 game.state.add('loadState', loadState);
+game.state.add('introState', introState);
 game.state.add('instructionState', instructionState);
 game.state.add('pickState', pickState);
 game.state.add('skinnyState', skinnyState);
 game.state.add('pricklyState', pricklyState);
 game.state.add('roundState', roundState);
 game.state.add('floweredState', floweredState);
+game.state.add('gameoverState', gameoverState);
+game.state.add('youwinState', youwinState);
 game.state.start('loadState');
