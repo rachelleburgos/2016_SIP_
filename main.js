@@ -12,22 +12,15 @@ var score = 50;
 var endScreen;
 var playAgain;
 var updated_score;
-var musicTitle;
-var musicCollection;
-
 
 var loadState = { // on load, with scrolling clouds and start button
     preload: function(){
         game.load.image('clouds', 'assets/clouds.gif');   
         game.load.image('startbutton', 'assets/start_button.png')
         game.load.image('splash', 'assets/start_logo.png')
-        game.load.audio('title', ['assets/chibi_ninja.mp3', 'assets/chibi_ninja.ogg'])
     },
     create: function(){
-        musicTitle = game.add.audio('title');
-
-        musicTitle.play();
-        musicTitle.loop = true
+        
         sky = game.add.tileSprite(0,0, 960, 550, 'clouds');       		
         this.splash = game.add.image (240, 30, 'splash')
        	this.splash.scale.setTo(0.65, 0.65);
@@ -53,7 +46,7 @@ var introState = {
     
     create: function(){
         background = game.add.tileSprite(0,0, 960, 550, 'intro');
-        var nextButton = this.game.add.button(850, 65, 'nextbutton', this.gotoInstruct, this);
+        var nextButton = this.game.add.button(800, 425, 'nextbutton', this.gotoInstruct, this);
     },
     
     gotoInstruct: function(){
@@ -74,9 +67,9 @@ var instructionState = { // state where you cactus is chosen, after enter is pre
         
         //var blueBg = game.add.image(0, 0, 'bluebackground');
         background = game.add.tileSprite(0,0, 960, 550, 'instructions');  
-		var nextButton = this.game.add.button(850, 65, 'nextbutton', this.gotoNext, this);
+		var nextButton = this.game.add.button(850, 450, 'nextbutton', this.gotoNext, this);
 		nextButton.anchor.setTo(0.5, 0.5);
-		nextButton.scale.setTo(0.95, 0.95);
+		nextButton.scale.setTo(1, 1);
 	},
 
         gotoNext: function(){
@@ -100,7 +93,7 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
         game.load.image('pickacactus', 'assets/pick_a_cactus.png'); 
     },
     create: function(){
-       	background = game.add.tileSprite(0,0, 960, 550, 'pickacactus');
+        background = game.add.tileSprite(0,0, 960, 550, 'pickacactus');
        
        // skinny cactus
         var skinnycactus = this.game.add.button(120,268, 'skinnycactus', this.gotoSkinny, this);
@@ -126,20 +119,18 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
 	  
 	gotoSkinny: function(){
         	this.game.state.start('skinnyState');
-        	game.sound.stopAll();
 	},
 	
 	gotoPrickly: function(){
         	this.game.state.start('pricklyState');
-			game.sound.stopAll();
+	
 	},
 	gotoRound: function(){
         	this.game.state.start('roundState');
-        	game.sound.stopAll();
+
 	},
     gotoFlowered: function(){
     		this.game.state.start('floweredState');
-    		game.sound.stopAll();
     }
 }
 
@@ -158,23 +149,20 @@ var skinnyState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
-         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
+        
          
 
 },
 
  	create: function(){
- 		musicCollection = game.add.audio('collection');
-
-        musicCollection.play();
-        musicCollection.loop = true
+        score = 50;
         var desertPic = this.game.add.image(0,0,'desert');
-        scoreText= game.add.text(780, 20, 'Health: 50%',  { font: '34px Arial', fill: '#FFFFFF'});
+        scoreText= game.add.text(720, 20, 'Positivity: 50%',  { font: '34px Arial', fill: '#FFFFFF'});
         skinnyPlayer = game.add.sprite(375,350, 'skinnycactus');
         skinnyPlayer.scale.setTo(0.3, 0.3);
-        heart= game.add.sprite(750,21, 'heart');
-        heart.scale.setTo(0.1, 0.1);
-        
+        heart= game.add.sprite(670,21, 'heart');
+        heart.scale.setTo(0.08, 0.08);
+
 
         //enable arcade functionality
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -190,19 +178,19 @@ var skinnyState = {
         good_elements = game.add.physicsGroup();
         bad_elements = game.add.physicsGroup();
 
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
         {
         spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
-        spider.body.velocity.y = game.rnd.between(80, 150);
+        spider.body.velocity.y = game.rnd.between(100, 200);
         }
 
         //random falling drop
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
         {
         drop = good_elements.create(game.world.randomX, -200, 'drop');
         drop.scale.setTo(0.1, 0.1);
-        drop.body.velocity.y = game.rnd.between(80, 150);
+        drop.body.velocity.y = game.rnd.between(90, 150);
         }
 
         //random falling chemical drop
@@ -211,7 +199,7 @@ var skinnyState = {
         {
         chemical = bad_elements.create(game.world.randomX, -200, 'chemical');
         chemical.scale.setTo(0.09, 0.09);
-        chemical.body.velocity.y = game.rnd.between(80, 150);
+        chemical.body.velocity.y = game.rnd.between(120, 150);
         }
 
         //random falling sun
@@ -220,12 +208,11 @@ var skinnyState = {
         {
         sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
-        sun.body.velocity.y = game.rnd.between(80, 150);
+        sun.body.velocity.y = game.rnd.between(90, 150);
 
         }       
 
   },
-    
     update: function (){
 
         good_elements.forEach(checkPos, this);
@@ -261,14 +248,15 @@ var skinnyState = {
      function collisionHandler (skinnyPlayer, good_elements){
        good_elements.y = -100
        good_elements.x = game.world.randomX;
-       score += 10;
-       scoreText.text = 'Health: ' + score + '%';
+       score += 5;
+       scoreText.text = 'Positivity: ' + score + '%';
+
         }     
   function collisionHandler1 (skinnyPlayer, bad_elements){
        bad_elements.y = -100
        bad_elements.x = game.world.randomX;
-       score -= 20;
-       scoreText.text = 'Health: ' + score + '%'; 
+       score -= 10;
+       scoreText.text = 'Positivity: ' + score + '%'; 
    }     
 
      
@@ -282,23 +270,17 @@ var pricklyState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
-         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
-
          
 },
 
     create: function(){
-    	musicCollection = game.add.audio('collection');
-
-        musicCollection.play();
-        musicCollection.loop = true
-        
+        score = 50;
         var desertPic = this.game.add.image(0,0,'desert');
-        scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
+        scoreText= game.add.text(720, 20, 'Positivity: 50%',  { font: '34px Arial', fill: '#FFFFFF'});
         
         pricklyPlayer = game.add.sprite(375,350, 'pricklycactus');
         pricklyPlayer.scale.setTo(1, 1);
-        heart= game.add.sprite(758,21, 'heart');
+        heart= game.add.sprite(670,21, 'heart');
         heart.scale.setTo(0.1, 0.1);
 
        // game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -313,11 +295,11 @@ var pricklyState = {
         good_elements = game.add.physicsGroup();
         bad_elements = game.add.physicsGroup();
 
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
     	{
         spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
-        spider.body.velocity.y = game.rnd.between(80, 150);
+        spider.body.velocity.y = game.rnd.between(100, 150);
     	}
 
     	//random falling drop
@@ -325,7 +307,7 @@ var pricklyState = {
     	{
         drop = good_elements.create(game.world.randomX, -200, 'drop');
         drop.scale.setTo(0.1, 0.1);
-        drop.body.velocity.y = game.rnd.between(80, 150);
+        drop.body.velocity.y = game.rnd.between(100, 170);
     	}
 
     	//random falling chemical drop
@@ -334,16 +316,16 @@ var pricklyState = {
     	{
         chemical = bad_elements.create(game.world.randomX, -200, 'chemical');
         chemical.scale.setTo(0.09, 0.09);
-        chemical.body.velocity.y = game.rnd.between(80, 150);
+        chemical.body.velocity.y = game.rnd.between(100, 150);
     	}
 
     	//random falling sun
     	//suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
     	{
         sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
-        sun.body.velocity.y = game.rnd.between(80, 150);
+        sun.body.velocity.y = game.rnd.between(120, 180);
 
     	}       
 
@@ -372,7 +354,7 @@ var pricklyState = {
        game.physics.arcade.overlap(pricklyPlayer, good_elements, collisionHandler, null, this);
        game.physics.arcade.overlap(pricklyPlayer, bad_elements, collisionHandler1, null, this);
 
-       if (score <= -50){
+       if (score <= 0){
             this.game.state.start('gameoverState');
         }
        if (score >= 100){
@@ -384,14 +366,14 @@ var pricklyState = {
      function collisionHandler (pricklyPlayer, good_elements){
        good_elements.y = -100
        good_elements.x = game.world.randomX;
-       score += 10;
-       scoreText.text = 'health: ' + score;
+       score += 5;
+       scoreText.text = 'Positivity: ' + score + '%';
         }     
   function collisionHandler1 (pricklyPlayer, bad_elements){
        bad_elements.y = -100
        bad_elements.x = game.world.randomX;
-       score -= 20;
-       scoreText.text = 'health: ' + score;
+       score -= 10;
+       scoreText.text = 'Positivity: ' + score + '%';
         }     
 
 
@@ -406,21 +388,15 @@ var roundState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
-         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
-
 },
     
     create: function(){
-    	musicCollection = game.add.audio('collection');
-
-        musicCollection.play();
-        musicCollection.loop = true
-
+        score = 50;
         var desertPic = this.game.add.image(0,0,'desert');
-        scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
+        scoreText= game.add.text(720, 20, 'Positivity: 0',  { font: '34px Arial', fill: '#FFFFFF'});
         roundPlayer = game.add.sprite(375,350, 'roundcactus');
         roundPlayer.scale.setTo(0.8,0.8);
-        heart= game.add.sprite(758,21, 'heart');
+        heart= game.add.sprite(670,21, 'heart');
         heart.scale.setTo(0.1, 0.1);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -433,7 +409,7 @@ var roundState = {
         good_elements = game.add.physicsGroup();
         bad_elements = game.add.physicsGroup();
 
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
         {
         spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
@@ -459,7 +435,7 @@ var roundState = {
 
         //random falling sun
         //suns = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
         {
         sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
@@ -492,7 +468,7 @@ var roundState = {
        game.physics.arcade.overlap(roundPlayer, good_elements, collisionHandler, null, this);
        game.physics.arcade.overlap(roundPlayer, bad_elements, collisionHandler1, null, this);
 
-       if (score <= -50){
+       if (score <= 0){
             this.game.state.start('gameoverState');
         }
        if (score >= 100){
@@ -504,14 +480,14 @@ var roundState = {
      function collisionHandler (roundPlayer, good_elements){
        good_elements.y = -100
        good_elements.x = game.world.randomX;
-       score += 10;
-       scoreText.text = 'health: ' + score;
+       score += 5;
+       scoreText.text = 'Positivity: ' + score + '%';
         }     
   function collisionHandler1 (roundPlayer, bad_elements){
        bad_elements.y = -100
        bad_elements.x = game.world.randomX;
-       score -= 20;
-       scoreText.text = 'health: ' + score; 
+       score -= 10;
+       scoreText.text = 'Positivity: ' + score + '%'; 
    }     
 
 
@@ -525,20 +501,14 @@ var floweredState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
-         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
-
 },
     create: function(){
-    	musicCollection = game.add.audio('collection');
-
-        musicCollection.play();
-        musicCollection.loop = true
-        
+        score = 50;
         var desertPic = this.game.add.sprite(0,0,'desert');
-        scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
+        scoreText= game.add.text(720, 20, 'Positivity: 50%',  { font: '34px Arial', fill: '#FFFFFF'});
         floweredPlayer = game.add.sprite(375,350, 'floweredcactus');
         floweredPlayer.scale.setTo(.75,.75);
-        heart= game.add.sprite(758,21, 'heart');
+        heart= game.add.sprite(670,21, 'heart');
         heart.scale.setTo(0.1, 0.1);
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -552,11 +522,11 @@ var floweredState = {
         good_elements = game.add.physicsGroup();
         bad_elements = game.add.physicsGroup();
 
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
         {
         spider = bad_elements.create(game.world.randomX, -200, 'spider');
         spider.scale.setTo(0.4, 0.4);
-        spider.body.velocity.y = game.rnd.between(80, 150);
+        spider.body.velocity.y = game.rnd.between(90, 150);
         }
 
         //random falling drop
@@ -564,16 +534,16 @@ var floweredState = {
         {
         drop = good_elements.create(game.world.randomX, -200, 'drop');
         drop.scale.setTo(0.1, 0.1);
-        drop.body.velocity.y = game.rnd.between(80, 150);
+        drop.body.velocity.y = game.rnd.between(100, 150);
         }
 
         //random falling chemical drop
         //chemicals = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        for (var i = 0; i < 1; i++)
+        for (var i = 0; i < 2; i++)
         {
         chemical = bad_elements.create(game.world.randomX, -200, 'chemical');
         chemical.scale.setTo(0.09, 0.09);
-        chemical.body.velocity.y = game.rnd.between(80, 150);
+        chemical.body.velocity.y = game.rnd.between(100, 200);
         }
 
         //random falling sun
@@ -582,7 +552,7 @@ var floweredState = {
         {
         sun = good_elements.create(game.world.randomX, -200, 'sun');
         sun.scale.setTo(0.1, 0.1);
-        sun.body.velocity.y = game.rnd.between(80, 150);
+        sun.body.velocity.y = game.rnd.between(120, 150);
 
         }       
 
@@ -611,7 +581,7 @@ var floweredState = {
        game.physics.arcade.overlap(floweredPlayer, good_elements, collisionHandler, null, this);
        game.physics.arcade.overlap(floweredPlayer, bad_elements, collisionHandler1, null, this);
 
-       if (score <= -50){
+       if (score <= 0){
             this.game.state.start('gameoverState');
         }
        if (score >= 100){
@@ -623,14 +593,14 @@ var floweredState = {
      function collisionHandler (floweredPlayer, good_elements){
        good_elements.y = -100
        good_elements.x = game.world.randomX;
-       score += 10;
-       scoreText.text = 'health: ' + score;
+       score += 5;
+       scoreText.text = 'Positivity: ' + score + '%';
         }     
   function collisionHandler1 (floweredPlayer, bad_elements){
        bad_elements.y = -100
        bad_elements.x = game.world.randomX;
-       score -= 20;
-       scoreText.text = 'health: ' + score; 
+       score -= 10;
+       scoreText.text = 'Positivity: ' + score + '%'; 
 }
 //game over page
 var gameoverState = {
@@ -640,7 +610,7 @@ var gameoverState = {
     },
     create: function(){
         endScreen = this.game.add.sprite(0,0,'gameoverscreen'); 
-        playAgain=  this.game.add.button(50,400, 'playagain', this.playAgainf, this);
+        playAgain=  this.game.add.button(450,350, 'playagain', this.playAgainf, this);
     },
     playAgainf: function(){
         score= 0;
@@ -655,7 +625,7 @@ var youwinState = {
     },
     create: function(){
         endScreen = this.game.add.sprite(0,0,'playagainscreen'); 
-        playAgain=  this.game.add.button(120,268, 'playagain', this.playAgainf, this);
+        playAgain=  this.game.add.button(350,380, 'playagain', this.playAgainf, this);
     },
     playAgainf: function(){
         score=0;
