@@ -12,6 +12,9 @@ var score = 50;
 var endScreen;
 var playAgain;
 var updated_score;
+var musicTitle;
+var musicCollection;
+var musicGameOver;
 
 
 var loadState = { // on load, with scrolling clouds and start button
@@ -19,9 +22,13 @@ var loadState = { // on load, with scrolling clouds and start button
         game.load.image('clouds', 'assets/clouds.gif');   
         game.load.image('startbutton', 'assets/start_button.png')
         game.load.image('splash', 'assets/start_logo.png')
+        game.load.audio('title', ['assets/chibi_ninja.mp3', 'assets/chibi_ninja.ogg'])
     },
     create: function(){
-        
+        musicTitle = game.add.audio('title');
+
+        musicTitle.play();
+        musicTitle.loop = true
         sky = game.add.tileSprite(0,0, 960, 550, 'clouds');       		
         this.splash = game.add.image (240, 30, 'splash')
        	this.splash.scale.setTo(0.65, 0.65);
@@ -32,6 +39,7 @@ var loadState = { // on load, with scrolling clouds and start button
 	},
 	playTheGame: function(){
 		this.game.state.start("introState");
+        
 	},
 	update: function(){
     	sky.tilePosition.x += 5;
@@ -76,6 +84,7 @@ var instructionState = { // state where you cactus is chosen, after enter is pre
         gotoNext: function(){
         	this.game.state.start("pickState");
 
+
 		},
 	update: function() {
     }
@@ -91,10 +100,16 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
         game.load.image('floweredcactus', 'assets/floweredcactus.png');
         game.load.image('pricklycactus', 'assets/pricklycactus.png');
         game.load.image('roundcactus', 'assets/roundcactus.png');
-        game.load.image('pickacactus', 'assets/pick_a_cactus.png'); 
+        game.load.image('pickacactus', 'assets/pick_a_cactus.png');
+        game.load.audio('title', ['assets/chibi_ninja.mp3', 'assets/chibi_ninja.ogg'] ) 
     },
     create: function(){
        	background = game.add.tileSprite(0,0, 960, 550, 'pickacactus');
+
+        musicTitle = game.add.audio('title');
+
+        musicTitle.play();
+        musicTitle.loop = true
        
        // skinny cactus
         var skinnycactus = this.game.add.button(120,268, 'skinnycactus', this.gotoSkinny, this);
@@ -120,18 +135,20 @@ var pickState = { // state where you cactus is chosen, after enter is pressed
 	  
 	gotoSkinny: function(){
         	this.game.state.start('skinnyState');
+        	game.sound.stopAll();
 	},
 	
 	gotoPrickly: function(){
         	this.game.state.start('pricklyState');
-	
+			game.sound.stopAll();
 	},
 	gotoRound: function(){
         	this.game.state.start('roundState');
-
+        	game.sound.stopAll();
 	},
     gotoFlowered: function(){
     		this.game.state.start('floweredState');
+    		game.sound.stopAll();
     }
 }
 
@@ -150,11 +167,16 @@ var skinnyState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
+         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
          
 
 },
 
  	create: function(){
+ 		musicCollection = game.add.audio('collection');
+
+        musicCollection.play();
+        musicCollection.loop = true
         var desertPic = this.game.add.image(0,0,'desert');
         scoreText= game.add.text(780, 20, 'Health: 50%',  { font: '34px Arial', fill: '#FFFFFF'});
         skinnyPlayer = game.add.sprite(375,350, 'skinnycactus');
@@ -269,10 +291,17 @@ var pricklyState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
+         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
+
          
 },
 
     create: function(){
+    	musicCollection = game.add.audio('collection');
+
+        musicCollection.play();
+        musicCollection.loop = true
+        
         var desertPic = this.game.add.image(0,0,'desert');
         scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
         
@@ -386,9 +415,16 @@ var roundState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
+         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
+
 },
     
     create: function(){
+    	musicCollection = game.add.audio('collection');
+
+        musicCollection.play();
+        musicCollection.loop = true
+
         var desertPic = this.game.add.image(0,0,'desert');
         scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
         roundPlayer = game.add.sprite(375,350, 'roundcactus');
@@ -498,8 +534,15 @@ var floweredState = {
          game.load.image('chemical', 'assets/chemicals.png');
          game.load.image('sun', 'assets/sun.png');
          game.load.image('heart', 'assets/heart.png');
+         game.load.audio('collection', ['assets/we_can_do_it.mp3','assets/we_can_do_it.ogg'])
+
 },
     create: function(){
+    	musicCollection = game.add.audio('collection');
+
+        musicCollection.play();
+        musicCollection.loop = true
+        
         var desertPic = this.game.add.sprite(0,0,'desert');
         scoreText= game.add.text(800, 20, 'health: 0',  { font: '34px Arial', fill: '#FFFFFF'});
         floweredPlayer = game.add.sprite(375,350, 'floweredcactus');
@@ -601,10 +644,17 @@ var floweredState = {
 //game over page
 var gameoverState = {
     preload: function() {
+
         game.load.image('gameoverscreen', 'assets/game_over.png'); 
         game.load.image('playagain', 'assets/play_again.png');
+        game.load.audio('gameOver', ['assets/game_over_music.mp3', 'assets/game_over_music.ogg'])
+
+
     },
     create: function(){
+        
+        game.sound.stopAll();
+         
         endScreen = this.game.add.sprite(0,0,'gameoverscreen'); 
         playAgain=  this.game.add.button(50,400, 'playagain', this.playAgainf, this);
     },
@@ -626,6 +676,8 @@ var youwinState = {
     playAgainf: function(){
         score=0;
         this.game.state.start('pickState');
+
+
     }
 }
 
